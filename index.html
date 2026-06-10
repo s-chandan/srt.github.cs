@@ -3,145 +3,362 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Portfolio</title>
+    <title>My Personal Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: #f4f4f9;
+        :root {
+            --pink: #fff0f3;
+            --dark-pink: #ffb3c1;
+            --accent: #f3e5f5;
+            --black: #1a1a1a;
+            --white: #ffffff;
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--white); color: var(--black); overflow-x: hidden; }
+        
+        /* --- NAVIGATION STYLES --- */
         header {
-            background-color: #007acc;
-            color: white;
-            text-align: center;
-            padding: 1.5rem 0;
+            position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 8%; background: rgba(255,255,255,0.95); z-index: 1000; backdrop-filter: blur(5px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .logo { font-size: 24px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+        
+        /* Computer/Laptop ke liye navbar */
+        nav a { margin-left: 25px; text-decoration: none; color: var(--black); font-size: 14px; text-transform: uppercase; font-weight: 500; transition: 0.3s; }
+        nav a:hover { color: var(--dark-pink); }
+
+        /* 3 Lines Hamburger Button (Shuru me hidden rahega) */
+        .menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--black);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
+        /* --- 1-Second Auto Slider --- */
+        .hero { position: relative; height: 55vh; width: 100%; overflow: hidden; margin-top: 70px; }
+        .slide { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            opacity: 0; transition: opacity 0.5s ease-in-out; 
+        }
+        .slide.active { opacity: 1; }
+        .slide img { 
+            width: 100%; height: 100%; object-fit: cover; 
+            transform: scale(1); transition: transform 1.2s ease;
+        }
+        .slide.active img { transform: scale(1.1); } 
+
+        .hero-text {
+            position: absolute; bottom: 10%; left: 8%; color: white; z-index: 10;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
         }
 
-        .profile {
-            text-align: center;
-            margin-top: 2rem;
+        /* --- Portfolio Gallery --- */
+        .gallery { padding: 80px 8%; text-align: center; }
+        .gallery-title { font-size: 32px; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 3px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
         }
-
-        .profile img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            margin-bottom: 1rem;
+        .grid-item { 
+            height: 400px; overflow: hidden; border-radius: 15px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); position: relative;
         }
+        .grid-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .grid-item:hover img { transform: scale(1.1); }
 
-        .profile h1 {
-            margin: 0.5rem 0;
-        }
+        /* --- Stats & Social --- */
+        .social-bar { background: var(--pink); padding: 50px 0; display: flex; justify-content: center; gap: 40px; }
+        .stat { text-align: center; }
+        .stat h3 { font-size: 30px; margin-bottom: 5px; }
+        .stat p { font-size: 14px; color: #666; text-transform: uppercase; }
 
-        .profile p {
-            color: #555;
-        }
+        /* --- About Section --- */
+        .about { padding: 50px 8%; display: flex; gap: 50px; align-items: center; background: var(--accent); }
+        .about-img { flex: 1; border-radius: 20px; overflow: hidden; }
+        .about-text { flex: 1; }
+        .about-text h2 { font-size: 36px; margin-bottom: 20px; }
 
-        .section {
-            margin: 2rem 0;
-        }
+        /* --- Footer --- */
+        footer { padding: 0px; text-align: center; background: var(--black); color: white; }
+        .social-icons a { color: white; font-size: 24px; margin: 0 15px; transition: 0.3s; }
+        .social-icons a:hover { color: var(--dark-pink); }
 
-        .section h2 {
-            border-bottom: 2px solid #007acc;
-            display: inline-block;
-            padding-bottom: 0.5rem;
-        }
+        /* --- MOBILE RESPONSIVE STYLES (Mobile ke liye settings) --- */
+        @media (max-width: 768px) {
+            .menu-btn { 
+                display: block; /* Mobile par 3 lines dikhengi */
+            }
 
-        ul {
-            list-style: none;
-            padding: 0;
-        }
+            nav {
+                display: none; /* Shuru me menu links chupi rahengi */
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+                padding: 20px 0;
+                border-top: 1px solid #eee;
+            }
 
-        li {
-            margin: 0.5rem 0;
-        }
+            /* Jab 3 lines par click hoga tab yeh class design ko open karegi */
+            nav.open {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
 
-        footer {
-            text-align: center;
-            padding: 1rem 0;
-            background-color: #007acc;
-            color: white;
-            margin-top: 2rem;
-        }
+            nav a {
+                margin: 0;
+                font-size: 16px;
+                padding: 10px 0;
+                width: 100%;
+                text-align: center;
+            }
 
-        a {
-            color: #007acc;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
+            .about { flex-direction: column; }
         }
     </style>
 </head>
 <body>
+
     <header>
-        <h1>My Personal Portfolio</h1>
+        <div class="logo">Shreeti</div>
+        
+        <div class="menu-btn" id="menuBtn">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <nav id="navMenu">
+            <a href="#home">Home</a>
+            <a href="#portfolio">Gallery</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </nav>
     </header>
 
-    <div class="container">
-        <div class="profile">
-            <img src="banner-img.jpg" alt="banner-img" width="10" height="150">
-            <h1>Shreeti Singh</h1>
-            <p style="background-color: yellow;">|| <strong> Designer </strong> ||</p>
-
+    <section class="hero" id="home">
+        <div class="slider">
+            <div class="slide active">
+                <img src="image-1.jpeg" alt="image-1">
+            </div>
+            <div class="slide">
+                <img src="image-2.jpeg" alt="image-2">
+            </div>
+            <div class="slide">
+                <img src="image-3.jpeg" alt="image-3">
+            </div>
+            <div class="slide">
+                <img src="image-4.jpeg" alt="image-3">
+            </div>
+            <div class="slide">
+                <img src="image-5.jpeg" alt="image-3">
+            </div>
+            <div class="slide">
+                <img src="image-6.jpeg" alt="image-3">
+            </div>
         </div>
-
-        <div class="section">
-            <h2>Personal Details</h2>
-            <ul>
-                <li><strong>Name:</strong> Shreeti Singh</li>
-                <li><strong>Email:</strong> shreetisingh332@gmail.com</li>
-                <li><strong>Phone:</strong> +91 9065352236</li>
-                <li><strong>Location:</strong> Siwan, Bihar</li>
-            </ul>
+        <div class="hero-text">
+            <h1>Creative Soul</h1>
+            <p>Content Creator | Model</p>
         </div>
+    </section>
 
-        <div class="section">
-            <h2>Educational Details</h2>
-            <ul>
-                <li><strong>Bachelor's Degree:</strong> Computer Science, IGNOU University (2018-2022)</li>
-                <li><strong>High School:</strong> Practical High School (2018-2022)</li>
-            </ul>
+    <section class="about" id="about">
+        <div class="about-img" style="display: flex; justify-content: center;">
+            <img src="image-1.jpeg" alt="About Me" style="width: 280px; height: 380px; object-fit: cover; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
         </div>
+        <div class="about-text">
+            <h2>About Me</h2>
+            <p>Welcome to my personal space! I'm a content creator with a passion for fashion and lifestyle. This website is a small reflection of my journey, creativity, and the content I love to share with my audience.</p>
+            <br>
+            <p><b>Location:</b> Bihar, India</p>
+            <p><b>Interests:</b> Photography, Fashion, Party</p>
+        </div>
+    </section>
 
-        <div class="section">
-            <h2>Skills</h2>
-            <ul>
-                <li>HTML</li>
-                <li>CSS</li>
-                <li>JavaScript</li>
-                <li>React</li>
-                <li>UI/UX Design</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>Projects</h2>
-            <ul>
-                <li><a href="#">Project 1: Portfolio Website</a> - A personal portfolio to showcase my skills and projects.</li>
-                <li><a href="#">Project 2: E-commerce Website</a> - A fully functional e-commerce website with payment gateway integration.</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>Contact Me</h2>
-            <p>If you'd like to get in touch, feel free to email me at <a href="shreetisingh332@gmail.com">shreetisingh332.com</a>.</p>
-        </div>
+    <div class="social-bar">
+        <div class="stat"><h3>50k+</h3><p>Followers</p></div>
+        <div class="stat"><h3>200+</h3><p>Posts</p></div>
+        <div class="stat"><h3>10+</h3><p>Collabs</p></div>
     </div>
 
+    <section id="portfolio" class="gallery" style="background: #111; color: #fff; overflow: hidden; perspective: 1000px; padding: 100px 0;">
+    <h2 class="gallery-title" style="color: #fff; margin-bottom: 40px;">My 3D Gallery</h2>
+    
+    <div class="container-3d" id="touchContainer">
+        <div class="cylinder-3d" id="cylinder">
+            <div class="grid-item-3d item-1"><img src="image-5.jpeg" alt="image-5"></div>
+            <div class="grid-item-3d item-2"><img src="image-6.jpeg" alt="image-6"></div>
+            <div class="grid-item-3d item-3"><img src="image-7.jpeg" alt="image-7"></div>
+            <div class="grid-item-3d item-4"><img src="image-8.jpeg" alt="image-8"></div>
+            <div class="grid-item-3d item-9"><img src="image-9.jpeg" alt="image-9"></div>
+            <div class="grid-item-3d item-10"><img src="image-10.jpeg" alt="image-10"></div>
+            <div class="grid-item-3d item-11"><img src="image-11.jpeg" alt="image-11"></div>
+            <div class="grid-item-3d item-12"><img src="image-12.jpeg" alt="image-12"></div>
+        </div>
+    </div>
+    
+    <p style="margin-top: 40px; color: #888; font-size: 14px;">Mobile par Left/Right Swipe karein ya Mouse scroll karein</p>
+</section>
+
+<style>
+    .container-3d {
+        width: 100%;
+        height: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        cursor: grab;
+        touch-action: none; /* Phone par swipe karte waqt pura page upar-neeche nahi hilega */
+    }
+    .container-3d:active { cursor: grabbing; }
+
+    .cylinder-3d {
+        position: relative;
+        width: 200px;  /* Mobile screen ke liye width perfect ki hai */
+        height: 300px; /* Mobile screen ke liye height perfect ki hai */
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.1, 0.8, 0.2, 1);
+        transform: rotateX(-10px) rotateY(0deg);
+    }
+
+    .grid-item-3d {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        backface-visibility: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .grid-item-3d img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Mobile ke liye circle ka gherao (translateZ) thoda kam kiya hai taaki screen me fit aaye */
+    .item-1 { transform: rotateY(0deg) translateZ(280px); }
+    .item-2 { transform: rotateY(45deg) translateZ(280px); }
+    .item-3 { transform: rotateY(90deg) translateZ(280px); }
+    .item-4 { transform: rotateY(135deg) translateZ(280px); }
+    .item-5 { transform: rotateY(180deg) translateZ(280px); }
+    .item-6 { transform: rotateY(225deg) translateZ(280px); }
+    .item-7 { transform: rotateY(270deg) translateZ(280px); }
+    .item-8 { transform: rotateY(315deg) translateZ(280px); }
+</style>
+
+<script>
+    const cylinder = document.getElementById('cylinder');
+    const container = document.getElementById('touchContainer');
+    let currentAngle = 0;
+    let startX = 0;
+
+    // --- PHONE KE LIYE TOUCH / SWIPE LOGIC ---
+    container.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX; // Jahan finger touch hui
+    });
+
+    container.addEventListener('touchmove', (e) => {
+        if (!startX) return;
+        
+        let moveX = e.touches[0].clientX;
+        let diffX = startX - moveX; // Finger kitna hili
+
+        // Agar finger 50 pixel se zyada hili toh ghumao
+        if (Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+                currentAngle -= 45; // Left swipe par clockwise
+            } else {
+                currentAngle += 45; // Right swipe par anti-clockwise
+            }
+            cylinder.style.transform = `rotateX(-10px) rotateY(${currentAngle}deg)`;
+            startX = 0; // Reset taaki baar-baar na ghumta rahe ek hi baar me
+        }
+    });
+
+    container.addEventListener('touchend', () => {
+        startX = 0;
+    });
+
+
+    // --- COMPUTER KE LIYE MOUSE WHEEL LOGIC ---
+    container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        if (e.deltaY > 0) {
+            currentAngle -= 45;
+        } else {
+            currentAngle += 45;
+        }
+        cylinder.style.transform = `rotateX(-10px) rotateY(${currentAngle}deg)`;
+    });
+</script>
+
+    <section id="contact" style="text-align: center; padding: 30px 0; background: var(--pink);">
+        <h2 class="gallery-title" style="margin-bottom: 20px;">Follow Me</h2>
+        <div class="social-icons">
+            <a href="#" style="color: var(--black);"><i class="fab fa-instagram"></i></a>
+            <a href="#" style="color: var(--black);"><i class="fab fa-youtube"></i></a>
+            <a href="#" style="color: var(--black);"><i class="fab fa-facebook"></i></a>
+        </div>
+    </section>
+
     <footer>
-        <p>&copy; 2025 Shreeti Singh. All rights reserved.</p>
+        <p>&copy; 2026 Shreeti. Created with Love.</p>
     </footer>
+
+    <script>
+        // 1. Automatic Slider Logic (1 Second)
+        const slides = document.querySelectorAll('.slide');
+        let current = 0;
+
+        function showNext() {
+            slides[current].classList.remove('active');
+            current = (current + 1) % slides.length;
+            slides[current].classList.add('active');
+        }
+        setInterval(showNext, 1000);
+
+        // 2. Mobile Hamburger Menu Toggle Logic
+        const menuBtn = document.getElementById('menuBtn');
+        const navMenu = document.getElementById('navMenu');
+        const navLinks = document.querySelectorAll('nav a');
+
+        // 3 Lines par click karne par menu open/close hoga
+        menuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('open');
+            
+            // Icon badalkar 'X' karne ke liye
+            const icon = menuBtn.querySelector('i');
+            if(navMenu.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Menu ka koi bhi option click karne par menu apne aap band ho jaye
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('open');
+                const icon = menuBtn.querySelector('i');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            });
+        });
+    </script>
 </body>
 </html>
