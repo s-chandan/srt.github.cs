@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* --- ABOUT IMAGE STYLING --- */
 .about-img {
     flex: 1;
@@ -13,4 +14,21 @@
     object-fit: cover;       /* Photo stretch ya kharab nahi hogi */
     border-radius: 15px;     /* Corners ko smooth rounded karne ke liye */
     box-shadow: 0 8px 25px rgba(0,0,0,0.05); /* Soft premium shadow */
+=======
+/* --- ABOUT IMAGE STYLING --- */
+.about-img {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    justify-content: center; /* Image ko center me rakhne ke liye */
+    align-items: center;
+}
+
+.about-img img {
+    width: 280px;            /* Aap is number ko badha ya ghatakar size adjust kar sakte hain */
+    height: 380px;           /* Image ki height */
+    object-fit: cover;       /* Photo stretch ya kharab nahi hogi */
+    border-radius: 15px;     /* Corners ko smooth rounded karne ke liye */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05); /* Soft premium shadow */
+>>>>>>> f9091c2bf96e9ebfa65b07e0aac968a9b54afb82
 }
