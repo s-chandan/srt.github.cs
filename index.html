@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Personal Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --pink: #fff0f3;
+            --dark-pink: #ffb3c1;
+            --accent: #f3e5f5;
+            --black: #1a1a1a;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--white); color: var(--black); overflow-x: hidden; }
+        
+        /* --- STANDARD HEADER STYLES --- */
+        header {
+            position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 8%; background: var(--pink); z-index: 1000; backdrop-filter: blur(5px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .logo { font-size: 24px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: var(--black); }
+        
+        nav a { margin-left: 25px; text-decoration: none; color: var(--black); font-size: 14px; text-transform: uppercase; font-weight: 500; transition: 0.3s; }
+        nav a:hover { color: var(--dark-pink); }
+
+        .menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--black);
+        }
+
+        /* --- AUTOMATIC 0.5s POPUP SLIDER --- */
+        .hero { position: relative; height: 55vh; width: 100%; overflow: hidden; margin-top: 60px; background: #000; }
+        .slide { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            opacity: 0; transition: opacity 0.5s ease-in-out; 
+        }
+        .slide.active { opacity: 1; }
+        
+        /* Image responsive box - automatic space settings */
+        .slide img { 
+            width: 100%; height: 100%; 
+            object-fit: cover; /* Photo choti-badi ho, frame automatic screen size me stretch karega */
+            transform: scale(1); transition: transform 0.5s ease-in-out; /* 0.5s POPUP ANIMATION */
+        }
+        .slide.active img { transform: scale(1.08); } /* Subtle clean popup effect */
+
+        .hero-text {
+            position: absolute; bottom: 10%; left: 8%; color: white; z-index: 10;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* --- ABOUT SECTION --- */
+        .about { padding: 50px 8%; display: flex; gap: 50px; align-items: center; background: var(--accent); }
+        .about-img { flex: 1; display: flex; justify-content: center; }
+        .about-text { flex: 1; }
+        .about-text h2 { font-size: 36px; margin-bottom: 20px; }
+
+        /* --- STATS BAR --- */
+        .social-bar { background: var(--pink); padding: 50px 0; display: flex; justify-content: center; gap: 40px; }
+        .stat { text-align: center; }
+        .stat h3 { font-size: 30px; margin-bottom: 5px; }
+        .stat p { font-size: 14px; color: #666; text-transform: uppercase; }
+
+        /* --- CLEAN SCROLL GALLERY --- */
+        .gallery-clean {
+            padding: 60px 0;
+            background: var(--white);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .gallery-title-clean {
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            color: var(--black);
+        }
+
+        .scroll-wrapper-clean {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 8%;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .scroll-wrapper-clean::-webkit-scrollbar { display: none; }
+
+        .scroll-item-clean {
+            flex: 0 0 280px;
+            height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            scroll-snap-align: start;
+        }
+
+        .scroll-item-clean img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- FOOTER & CONTACT --- */
+        footer { padding: 30px 0; text-align: center; background: var(--black); color: white; }
+        .social-icons a { color: var(--black); font-size: 24px; margin: 0 15px; transition: 0.3s; }
+        .social-icons a:hover { color: var(--dark-pink); }
+
+        /* --- MOBILE RESPONSIVE STYLES --- */
+        @media (max-width: 768px) {
+            .menu-btn { display: block; }
+            nav {
+                display: none; position: absolute; top: 100%; left: 0; width: 100%;
+                background: var(--pink); box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+                padding: 20px 0; border-top: 1px solid rgba(0,0,0,0.05);
+            }
+            nav.open { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+            nav a { margin: 0; font-size: 16px; padding: 10px 0; width: 100%; text-align: center; }
+            .about { flex-direction: column; text-align: center; }
+            
+            @media (min-width: 769px) {
+                .scroll-wrapper-clean { flex-wrap: wrap; justify-content: center; }
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Shreeti</div>
+        <div class="menu-btn" id="menuBtn">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+        <nav id="navMenu">
+            <a href="#home">Home</a>
+            <a href="#portfolio">Gallery</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="slider">
+            <div class="slide active"><img src="image-1.jpeg" alt="image-1"></div>
+            <div class="slide"><img src="image-2.jpeg" alt="image-2"></div>
+            <div class="slide"><img src="image-3.jpeg" alt="image-3"></div>
+            <div class="slide"><img src="image-4.jpeg" alt="image-4"></div>
+            <div class="slide"><img src="image-5.jpeg" alt="image-5"></div>
+            <div class="slide"><img src="image-6.jpeg" alt="image-6"></div>
+        </div>
+        <div class="hero-text">
+            <h1>Creative Soul</h1>
+            <p>Content Creator | Model</p>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="about-img">
+            <img src="image-1.jpeg" alt="About Me" style="width: 280px; height: 380px; object-fit: cover; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+        </div>
+        <div class="about-text">
+            <h2>About Me</h2>
+            <p>Welcome to my personal space! I'm a content creator with a passion for fashion and lifestyle. This website is a small reflection of my journey, creativity, and the content I love to share with my audience.</p>
+            <br>
+            <p><b>Location:</b> Bihar, India</p>
+            <p><b>Interests:</b> Photography, Fashion, Party</p>
+        </div>
+    </section>
+
+    <div class="social-bar">
+        <div class="stat"><h3>50k+</h3><p>Followers</p></div>
+        <div class="stat"><h3>200+</h3><p>Posts</p></div>
+        <div class="stat"><h3>10+</h3><p>Collabs</p></div>
+    </div>
+
+    <section id="portfolio" class="gallery-clean">
+        <h2 class="gallery-title-clean">My Gallery</h2>
+        <div class="scroll-wrapper-clean">
+            <div class="scroll-item-clean"><img src="image-5.jpeg" alt="image-5"></div>
+            <div class="scroll-item-clean"><img src="image-6.jpeg" alt="image-6"></div>
+            <div class="scroll-item-clean"><img src="image-7.jpeg" alt="image-7"></div>
+            <div class="scroll-item-clean"><img src="image-8.jpeg" alt="image-8"></div>
+            <div class="scroll-item-clean"><img src="image-9.jpeg" alt="image-9"></div>
+            <div class="scroll-item-clean"><img src="image-10.jpeg" alt="image-10"></div>
+            <div class="scroll-item-clean"><img src="image-11.jpeg" alt="image-11"></div>
+            <div class="scroll-item-clean"><img src="image-12.jpeg" alt="image-12"></div>
+        </div>
+    </section>
+
+    <section id="contact" style="text-align: center; padding: 40px 0; background: var(--pink);">
+        <h2 style="font-size: 28px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">Follow Me</h2>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Shreeti. Created with Love.</p>
+    </footer>
+
+    <script>
+        // Automatic Slider Setup (Smooth 0.5s Toggle Every 2.5 seconds)
+        const slides = document.querySelectorAll('.slide');
+        let current = 0;
+
+        function showNext() {
+            slides[current].classList.remove('active');
+            current = (current + 1) % slides.length;
+            slides[current].classList.add('active');
+        }
+        setInterval(showNext, 2500); // Har 2.5 second me image toggle hogi aur 0.5 second me smoothly popup hogi
+
+        // Mobile Responsive Menu Script
+        const menuBtn = document.getElementById('menuBtn');
+        const navMenu = document.getElementById('navMenu');
+        const navLinks = document.querySelectorAll('nav a');
+
+        menuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('open');
+            const icon = menuBtn.querySelector('i');
+            if(navMenu.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('open');
+                const icon = menuBtn.querySelector('i');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            });
+        });
+    </script>
+</body>
+</html>
